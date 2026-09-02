@@ -8602,7 +8602,7 @@ function load() {
   function renderRelease() {
     const rows = D.release.filter((r) => r.metric === currentMetric && r.date === currentDate);
     renderTable("release-tbl",
-      ["排名", "剧名", "预计上线", "集数", "制作风格", "主题分类", "发布账号", "简介", "推荐依据"],
+      ["排名", "剧名", "预计发布时间", "集数", "制作风格", "主题分类", "发布账号", "简介", "推荐依据"],
       rows,
       (r, i) => `<td>${rankCell(i)}</td>
         <td class="drama-name">${esc(r.name)}${r.hit ? badge("hit", `已上榜 ${fmtDate(r.hit_dates[0])}`) : ""}</td>
