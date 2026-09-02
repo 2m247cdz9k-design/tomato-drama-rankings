@@ -137,7 +137,15 @@
   .muted { color: var(--text2); }
   .brief {
     display: block; max-width: 360px; color: var(--text2); font-size: 12px; line-height: 1.5;
-    white-space: normal; overflow-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  .brief-text {
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .brief.open .brief-text { display: block; -webkit-line-clamp: unset; }
+  .brief-toggle {
+    color: var(--accent); cursor: pointer; font-size: 11.5px; margin-left: 3px;
+    user-select: none; white-space: nowrap;
   }
   .pill {
     display: inline-block; font-size: 11px; font-weight: 500; color: #555;
@@ -8473,8 +8481,16 @@ const fmtLaunch = (v) => {
   const d = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
   return d ? `${+d[2]}·${+d[3]}` : s.slice(0, 16);
 };
+document.addEventListener("click", (e) => {
+  const tg = e.target.closest(".brief-toggle");
+  if (!tg) return;
+  e.preventDefault();
+  const box = tg.closest(".brief");
+  box.classList.toggle("open");
+  tg.textContent = box.classList.contains("open") ? "收起" : "展开";
+});
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const brief = (t) => t ? `<span class="brief" title="${esc(t)}">${esc(t)}</span>` : "—";
+const brief = (t) => t ? `<span class="brief"><span class="brief-text">${esc(t)}</span>${t.length > 40 ? `<a class="brief-toggle" href="javascript:void(0)">展开</a>` : ""}</span>` : "—";
 
 function rankCell(i) {
   const cls = i < 3 ? "rank top" : "rank";
