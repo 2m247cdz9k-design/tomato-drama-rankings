@@ -174,9 +174,18 @@
     border: 1px solid #ffc4bf; color: #8f1d13;
     border-radius: 14px; padding: 12px 16px; margin-bottom: 20px;
     font-size: 13.5px;
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
   }
   .today-alert b { color: #c5261c; }
-  .today-alert .names { font-weight: 600; }
+  .today-alert .today-list { margin-top: 2px; }
+  .today-item { line-height: 1.7; overflow-wrap: anywhere; word-break: break-word; }
+  .copy-btn {
+    flex: 0 0 auto; background: #c5261c; color: #fff; border: none;
+    border-radius: 999px; padding: 6px 14px; font-size: 12px; font-weight: 600;
+    cursor: pointer; font-family: inherit; white-space: nowrap;
+    transition: background .2s;
+  }
+  .copy-btn:hover { background: #9e1f16; }
 
   /* ---------- Date tabs (segmented) ---------- */
   .date-tabs { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
@@ -314,7 +323,13 @@
       <h2>上榜的新剧</h2>
       <p>从最新分时榜单中识别新近发布、正在起量的剧：<b>持续在榜</b>＝多期分时连续在榜；<b>新剧上升</b>＝近 1~2 天发布、分时排名上升（刚进榜的会标记“新上榜”）。</p>
     </div>
-    <div class="today-alert" id="today-alert" hidden></div>
+    <div class="today-alert" id="today-alert" hidden>
+      <div>
+        <b>🔥 当日新剧上榜单：</b>
+        <div class="today-list" id="today-list"></div>
+      </div>
+      <button class="copy-btn" id="today-copy" type="button">📋 复制</button>
+    </div>
     <h3 style="font-size:18px;margin-bottom:14px;">持续在榜 · 新剧多期在榜</h3>
     <div class="panel tbl-wrap" style="margin-bottom:28px;">
       <table id="sustained-tbl"></table>
@@ -9856,7 +9871,29 @@ function load() {
   const todayRows = D.today_new || [];
   if (todayAlert && todayRows.length) {
     todayAlert.hidden = false;
-    todayAlert.innerHTML = `🔥 <b>当日新剧上榜单：</b><span class="names">${todayRows.map((r) => `${esc(r.name)}（第${r.rank}名）`).join("、")}</span>`;
+    const todayList = document.getElementById("today-list");
+    todayList.innerHTML = todayRows.map((r, i) =>
+      `<div class="today-item">${i + 1}. ${esc(r.name)}（第${r.rank}名）</div>`).join("");
+    const todayCopy = document.getElementById("today-copy");
+    if (todayCopy) {
+      todayCopy.onclick = async () => {
+        const text = "🔥 当日新剧上榜单：\n" + todayRows.map((r, i) => `${i + 1}. ${r.name}（第${r.rank}名）`).join("\n");
+        let ok = false;
+        try {
+          await navigator.clipboard.writeText(text);
+          ok = true;
+        } catch (e) {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          try { ok = document.execCommand("copy"); } catch (e2) { ok = false; }
+          ta.remove();
+        }
+        todayCopy.textContent = ok ? "已复制 ✓" : "复制失败";
+        setTimeout(() => { todayCopy.textContent = "📋 复制"; }, 1800);
+      };
+    }
   }
 
   // 老剧复投
