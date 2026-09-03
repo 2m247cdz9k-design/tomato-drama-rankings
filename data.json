@@ -1,6 +1,6 @@
 {
  "generated": "2026-09-03",
- "updated_at": "2026-09-03 16:00",
+ "updated_at": "2026-09-03 16:01",
  "release_candidates": 2911,
  "release_dates": [
   "2026-09-06",
@@ -4610,6 +4610,32 @@
    "theme": "逆袭打脸",
    "account": "小蔻剧场",
    "abstract": null
+  }
+ ],
+ "today_new": [
+  {
+   "rank": 25,
+   "name": "一碗热饭暖人性",
+   "release": "2026-09-03 00:06",
+   "eps": 49,
+   "style": "经典3D",
+   "account": "第九幕"
+  },
+  {
+   "rank": 43,
+   "name": "餐桌上的河豚",
+   "release": null,
+   "eps": null,
+   "style": "未标注",
+   "account": null
+  },
+  {
+   "rank": 91,
+   "name": "这台手术让出来",
+   "release": "2026-09-03 00:30",
+   "eps": 45,
+   "style": "经典3D",
+   "account": "星漫世界"
   }
  ],
  "reinvest": [

@@ -400,7 +400,7 @@
 <script>
 window.__DATA__ = {
  "generated": "2026-09-03",
- "updated_at": "2026-09-03 16:00",
+ "updated_at": "2026-09-03 16:01",
  "release_candidates": 2911,
  "release_dates": [
   "2026-09-06",
@@ -5010,6 +5010,32 @@ window.__DATA__ = {
    "theme": "逆袭打脸",
    "account": "小蔻剧场",
    "abstract": null
+  }
+ ],
+ "today_new": [
+  {
+   "rank": 25,
+   "name": "一碗热饭暖人性",
+   "release": "2026-09-03 00:06",
+   "eps": 49,
+   "style": "经典3D",
+   "account": "第九幕"
+  },
+  {
+   "rank": 43,
+   "name": "餐桌上的河豚",
+   "release": null,
+   "eps": null,
+   "style": "未标注",
+   "account": null
+  },
+  {
+   "rank": 91,
+   "name": "这台手术让出来",
+   "release": "2026-09-03 00:30",
+   "eps": 45,
+   "style": "经典3D",
+   "account": "星漫世界"
   }
  ],
  "reinvest": [
@@ -9832,15 +9858,12 @@ function load() {
       <td class="muted">${esc(r.account ?? "—")}</td>
       <td>${brief(r.abstract)}</td>`);
 
-  // 当日新剧醒目提示
-  const todayMap = new Map();
-  for (const r of [...(D.sustained || []), ...(D.rising || [])]) {
-    if (r.today_label && !todayMap.has(r.name)) todayMap.set(r.name, r);
-  }
+  // 当日新剧醒目提示（今日发布且已上最新榜单）
   const todayAlert = document.getElementById("today-alert");
-  if (todayAlert && todayMap.size) {
+  const todayRows = D.today_new || [];
+  if (todayAlert && todayRows.length) {
     todayAlert.hidden = false;
-    todayAlert.innerHTML = `🔥 <b>当日新剧上榜单：</b><span class="names">${[...todayMap.values()].map((r) => `${esc(r.name)}（第${r.rank}名）`).join("、")}</span>`;
+    todayAlert.innerHTML = `🔥 <b>当日新剧上榜单：</b><span class="names">${todayRows.map((r) => `${esc(r.name)}（第${r.rank}名）`).join("、")}</span>`;
   }
 
   // 老剧复投
