@@ -415,7 +415,7 @@
 <script>
 window.__DATA__ = {
  "generated": "2026-09-07",
- "updated_at": "2026-09-07 10:29",
+ "updated_at": "2026-09-07 10:35",
  "release_candidates": 8379,
  "release_dates": [
   "2026-09-10",
@@ -5324,7 +5324,7 @@ window.__DATA__ = {
    "name": "庶女抢我女儿婚事，重生后我亲手替她披嫁衣",
    "count": 14,
    "first": "2026-08-23",
-   "is_new": true,
+   "is_new": false,
    "release": "2026-08-25 08:00",
    "eps": 96,
    "style": "经典3D",
@@ -5402,7 +5402,7 @@ window.__DATA__ = {
    "name": "八零小旺媳之冷面队长懵了",
    "count": 13,
    "first": "2026-08-19",
-   "is_new": true,
+   "is_new": false,
    "release": "2026-07-22 09:08",
    "eps": 105,
    "style": "经典3D",
@@ -5777,7 +5777,7 @@ window.__DATA__ = {
    "name": "救赎，献爱为枝",
    "first": "2026-09-07",
    "release": null,
-   "today_label": "今日发布",
+   "today_label": "当日新上榜",
    "occ": 3,
    "streak": 3,
    "count": 1,
@@ -6114,6 +6114,7 @@ window.__DATA__ = {
   {
    "rank": 6,
    "name": "重回急诊当天，我不再犹豫",
+   "label": "今日发布",
    "release": "2026-09-07 08:00",
    "eps": 60,
    "style": "其他",
@@ -6122,6 +6123,7 @@ window.__DATA__ = {
   {
    "rank": 48,
    "name": "救赎，献爱为枝",
+   "label": "当日新上榜",
    "release": null,
    "eps": null,
    "style": "未标注",
@@ -6130,10 +6132,20 @@ window.__DATA__ = {
   {
    "rank": 79,
    "name": "重生扬子鳄：从网购开始吞噬进化",
+   "label": "今日发布",
    "release": "2026-09-07 00:04",
    "eps": 134,
    "style": "其他",
    "account": "最漫剧场"
+  },
+  {
+   "rank": 97,
+   "name": "太子妃只谈权不谈情",
+   "label": "当日新上榜",
+   "release": "2026-06-18 09:58",
+   "eps": 59,
+   "style": "仿真人",
+   "account": "芯灵剧场"
   }
  ],
  "reinvest": [
@@ -6241,7 +6253,7 @@ window.__DATA__ = {
    "win_count": 6,
    "total_count": 14,
    "last_date": "2026-09-04",
-   "is_new": true,
+   "is_new": false,
    "release": "2026-08-08 18:00",
    "eps": 60,
    "style": "未标注",
@@ -6507,7 +6519,7 @@ window.__DATA__ = {
    "win_count": 4,
    "total_count": 6,
    "last_date": "2026-08-23",
-   "is_new": true,
+   "is_new": false,
    "release": "2026-08-17 11:00",
    "eps": 89,
    "style": "仿真人",
@@ -6521,7 +6533,7 @@ window.__DATA__ = {
    "win_count": 4,
    "total_count": 6,
    "last_date": "2026-08-24",
-   "is_new": true,
+   "is_new": false,
    "release": "2026-08-17 17:50",
    "eps": 82,
    "style": "仿真人",
@@ -6563,7 +6575,7 @@ window.__DATA__ = {
    "win_count": 4,
    "total_count": 5,
    "last_date": "2026-08-22",
-   "is_new": true,
+   "is_new": false,
    "release": "2026-08-17 10:18",
    "eps": 50,
    "style": "经典3D",
@@ -6577,7 +6589,7 @@ window.__DATA__ = {
    "win_count": 4,
    "total_count": 5,
    "last_date": "2026-08-26",
-   "is_new": true,
+   "is_new": false,
    "release": "2026-08-14 16:04",
    "eps": 71,
    "style": "经典3D",
@@ -13309,7 +13321,7 @@ function load() {
     ["最新排名", "剧名", "上线/首榜", "上榜期数", "连续期数", "集数", "制作风格", "主题分类", "发布账号", "简介"],
     D.sustained || [],
     (r) => `<td>${rankNum(r.rank)}</td>
-      <td class="drama-name">${esc(r.name)}${r.today_label ? badge("today", r.today_label) : ""}</td>
+      <td class="drama-name">${esc(r.name)}${r.today_label === "今日发布" ? badge("today", "今日发布") : r.today_label === "当日新上榜" ? badge("sub", "当日新上榜") : ""}</td>
       <td class="muted">${r.release ? fmtLaunch(r.release) : esc(r.first)}</td>
       <td class="num red">${r.occ}期</td>
       <td class="num">${r.streak}期</td>
@@ -13324,7 +13336,7 @@ function load() {
     ["最新排名", "剧名", "上线/首榜", "上期排名", "变化", "集数", "制作风格", "主题分类", "发布账号", "简介"],
     D.rising || [],
     (r) => `<td>${rankNum(r.rank)}</td>
-      <td class="drama-name">${esc(r.name)}${r.today_label ? badge("today", r.today_label) : ""}</td>
+      <td class="drama-name">${esc(r.name)}${r.today_label === "今日发布" ? badge("today", "今日发布") : r.today_label === "当日新上榜" ? badge("sub", "当日新上榜") : ""}</td>
       <td class="muted">${r.release ? fmtLaunch(r.release) : esc(r.first)}</td>
       <td class="num">${r.prev_rank ?? "—"}</td>
       <td>${r.rise ? pill(`↑${r.rise}位`, "green") : badge("new", "新上榜")}</td>
@@ -13341,7 +13353,7 @@ function load() {
     todayAlert.hidden = false;
     const todayList = document.getElementById("today-list");
     todayList.innerHTML = todayRows.map((r, i) =>
-      `<div class="today-item">${i + 1}. ${esc(r.name)}（第${r.rank}名）</div>`).join("");
+      `<div class="today-item">${i + 1}. ${esc(r.name)}（第${r.rank}名 · ${r.label === "今日发布" ? "今日发布" : "当日新上榜"}）</div>`).join("");
     const todayCopy = document.getElementById("today-copy");
     if (todayCopy) {
       todayCopy.onclick = async () => {
