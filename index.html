@@ -204,6 +204,8 @@
   .pill.green { background: #e8f5ee; color: #1f7a4d; }
   .reason { color: #4a4a50; max-width: 480px; font-size: 12.5px; }
   .reason b { color: var(--text); }
+  .reason .brief { max-width: 480px; color: #4a4a50; font-size: 12.5px; }
+  .muted .brief { max-width: 420px; }
 
   /* ---------- 新剧推荐 · 打分规则（可展开/收起） ---------- */
   .rules {
@@ -13669,7 +13671,7 @@ function load() {
       <td>${esc(r.theme)}</td>
       <td class="num">${r.cons ? fmt(Math.round(r.cons)) : "—"}</td>
       <td class="num">${r.roi7 != null ? r.roi7.toFixed(2) : "—"}</td>
-      <td class="muted">${esc(r.dates)}</td>`);
+      <td class="muted">${brief(r.dates)}</td>`);
 
   // 持续在榜
   renderTable("sustained-tbl",
@@ -13745,7 +13747,7 @@ function load() {
       <td>${pill(r.style, r.style === "经典3D" ? "green" : "red")}</td>
       <td class="num">${r.cons ? fmt(Math.round(r.cons)) : "—"}</td>
       <td class="num">${r.roi7 != null ? r.roi7.toFixed(2) : "—"}</td>
-      <td class="reason">${esc(r.reason)}</td>`);
+      <td class="reason">${brief(r.reason)}</td>`);
 
   // 新剧推荐（口径 A/B + 日期切换）
   const dates = D.release_dates || ["2026-09-03"];
@@ -13781,7 +13783,7 @@ function load() {
         <td>${esc(r.theme)}</td>
         <td class="muted">${esc(r.account ?? "—")}</td>
         <td>${brief(r.abstract)}</td>
-        <td class="reason">${esc(r.reason)}</td>`);
+        <td class="reason">${brief(r.reason)}</td>`);
   }
   tabs.addEventListener("click", (e) => {
     const btn = e.target.closest(".date-tab");
