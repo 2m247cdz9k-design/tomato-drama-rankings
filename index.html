@@ -13795,7 +13795,7 @@ function load() {
     <div class="stat-card"><h3>发布账号 TOP · 上榜次数</h3>${bars(D.summary.top_accounts.slice(0, 8), "label", "n", "pct")}</div>
     <div class="stat-card"><h3>发布账号 TOP · 上榜剧数</h3>${bars(D.summary.top_accounts_breadth.slice(0, 8), "label", "n")}</div>`;
 
-  // 自动检测更新：每45秒检查一次数据版本，有更新则自动刷新页面
+  // 自动检测更新：每30秒检查一次数据版本，有更新则自动刷新页面
   const _lastVer = D.updated_at || D.generated || "";
   setInterval(async () => {
     try {
@@ -13805,7 +13805,7 @@ function load() {
       const _u = _j.updated_at || _j.generated || "";
       if (_u && _u !== _lastVer) window.location.reload();
     } catch (_e) {}
-  }, 45000);
+  }, 30000);
 }
 
 // 优先尝试加载外部 data.json（便于后续更新），失败则使用内嵌数据
