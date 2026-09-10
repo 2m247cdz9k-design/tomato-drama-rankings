@@ -16864,7 +16864,7 @@ function load() {
 
   // 长跑新剧榜
   renderTable("longrun-tbl",
-    ["最新排名", "剧名", "上线时间", "上线天数", "近7天上榜", "连续在榜", "最好排名", "集数", "风格", "主题", "9月消耗(元)", "7日ROI", "发布账号", "简介"],
+    ["最新排名", "剧名", "上线时间", "上线天数", "近7天上榜", "连续在榜", "最好排名", "集数", "风格", "9月消耗(元)", "7日ROI", "发布账号", "简介"],
     D.longrun || [],
     (r) => `<td>${rankNum(r.rank)}</td>
       <td class="drama-name">${esc(r.name)}</td>
@@ -16875,7 +16875,6 @@ function load() {
       <td class="num">${r.best ?? "—"}</td>
       <td class="num">${r.eps ?? "—"}</td>
       <td>${pill(r.style, r.style === "经典3D" ? "green" : "red")}</td>
-      <td>${esc(r.theme)}</td>
       <td class="num">${r.cons ? fmt(Math.round(r.cons)) : "—"}</td>
       <td class="num">${r.roi7 != null ? r.roi7.toFixed(2) : "—"}</td>
       <td class="muted">${esc(r.account ?? "—")}</td>
