@@ -206,6 +206,8 @@
   .reason b { color: var(--text); }
   .reason .brief { max-width: 480px; color: #4a4a50; font-size: 12.5px; }
   .muted .brief { max-width: 420px; }
+  #longrun-tbl { min-width: 1080px; }
+  #longrun-tbl td { vertical-align: middle; }
 
   /* ---------- 新剧推荐 · 打分规则（可展开/收起） ---------- */
   .rules {
@@ -16864,19 +16866,15 @@ function load() {
 
   // 长跑新剧榜
   renderTable("longrun-tbl",
-    ["最新排名", "剧名", "上线时间", "上线天数", "近7天上榜", "连续在榜", "最好排名", "集数", "风格", "9月消耗(元)", "7日ROI", "发布账号", "简介"],
+    ["排名", "剧名", "上线", "在榜表现", "最新/最好", "集数 / 风格", "9月消耗 / 7日ROI", "发布账号", "简介"],
     D.longrun || [],
     (r) => `<td>${rankNum(r.rank)}</td>
       <td class="drama-name">${esc(r.name)}</td>
-      <td class="muted">${r.release ? fmtLaunch(r.release) : esc(r.first)}</td>
-      <td class="num">${r.days_live}天</td>
-      <td class="num red">${r.on_days}天</td>
-      <td class="num">${r.streak}天</td>
-      <td class="num">${r.best ?? "—"}</td>
-      <td class="num">${r.eps ?? "—"}</td>
-      <td>${pill(r.style, r.style === "经典3D" ? "green" : "red")}</td>
-      <td class="num">${r.cons ? fmt(Math.round(r.cons)) : "—"}</td>
-      <td class="num">${r.roi7 != null ? r.roi7.toFixed(2) : "—"}</td>
+      <td class="muted">${r.release ? fmtLaunch(r.release) : esc(r.first)} · ${r.days_live}天</td>
+      <td><span class="num red">${r.on_days}/7天</span> <span class="muted">· 连续${r.streak}天</span></td>
+      <td class="num">#${r.rank} <span class="muted">/ #${r.best ?? "—"}</span></td>
+      <td class="num">${r.eps ?? "—"}集 ${pill(r.style, r.style === "经典3D" ? "green" : "red")}</td>
+      <td class="num">${r.cons ? fmt(Math.round(r.cons)) : "—"} <span class="muted">/ ${r.roi7 != null ? r.roi7.toFixed(2) : "—"}</span></td>
       <td class="muted">${esc(r.account ?? "—")}</td>
       <td>${brief(r.abstract)}</td>`);
 
