@@ -21398,8 +21398,9 @@ function load() {
   // 新剧推荐（口径 A/B + 日期切换）
   // 网页新剧推荐展示 T+2（后天上线）及之前的全部批次，T+3 及以后不展示
   const _plusDays = (s, n) => {
-    const dt = new Date(String(s) + "T00:00:00");
-    dt.setDate(dt.getDate() + n);
+    const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(s));
+    if (!m) return "";
+    const dt = new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]) + n));
     return dt.toISOString().slice(0, 10);
   };
   const _t2 = _plusDays(D.generated || D.updated_at, 2);
