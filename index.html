@@ -285,6 +285,7 @@
       <a href="#evergreen">常青榜</a>
       <a href="#new">上榜的新剧</a>
       <a href="#longrun">长跑新剧</a>
+      <a href="#track">TOP剧跟踪</a>
       <a href="#reinvest">老剧复投</a>
       <a href="#release">新剧推荐</a>
       <a href="#stats">特点统计</a>
@@ -357,10 +358,22 @@
     </div>
   </section>
 
+  <!-- top剧重点跟踪 -->
+  <section id="track">
+    <div class="sec-head">
+      <span class="sec-tag">04</span>
+      <h2>top剧重点跟踪</h2>
+      <p>最近 30 期免费榜进入过 TOP10 的剧目，按进入 TOP10 的次数排序（最多展示 50 部，不满则按实际数量展示）。</p>
+    </div>
+    <div class="panel tbl-wrap">
+      <table id="track-tbl"></table>
+    </div>
+  </section>
+
   <!-- 老剧复投 -->
   <section id="reinvest">
     <div class="sec-head">
-      <span class="sec-tag">04</span>
+      <span class="sec-tag">05</span>
       <h2>老剧复投榜</h2>
       <p>两周前（8·17~8·23）多次上榜、但最近三天已不在榜单的剧目 —— 热度已回落，复投窗口约两周，正是重新投放的窗口期。</p>
     </div>
@@ -372,9 +385,9 @@
   <!-- 新剧推荐 -->
   <section id="release">
     <div class="sec-head">
-      <span class="sec-tag">05</span>
+      <span class="sec-tag">06</span>
       <h2>新剧推荐榜</h2>
-      <p><b>AB 测试</b>：<b>口径A</b>＝广度型（内容为主、账号小幅加分，对照组）；<b>口径B</b>＝精品账号优先（账号战绩占 50% 权重）。<b>9·14 起每榜只保留 TOP15</b>（主推前 5、备选 6-15），9·13 及之前批次保持 TOP20 并锁定回测。覆盖 <b id="rel-dates">—</b> 可投新剧（共 <b id="rel-total">—</b> 部）。</p>
+      <p><b>网页只展示 T+2（后天上线）批次</b>；<b>口径A</b>＝广度型（内容为主、账号小幅加分，对照组）；<b>口径B</b>＝精品账号优先（账号战绩占 50% 权重）。<b>9·14 起每榜只保留 TOP15</b>（主推前 5、备选 6-15），9·13 及之前批次保持 TOP20 并锁定回测。覆盖 <b id="rel-dates">—</b> 可投新剧（共 <b id="rel-total">—</b> 部）。</p>
     </div>
     <details class="rules" id="rule-detail">
       <summary><span>AB 打分规则说明</span><span class="rule-arrow">▼</span></summary>
@@ -413,7 +426,7 @@
   <!-- 特点统计 -->
   <section id="stats">
     <div class="sec-head">
-      <span class="sec-tag">06</span>
+      <span class="sec-tag">07</span>
       <h2>特点统计</h2>
       <p>基于全部 900 部上榜剧目与剧单标签的分布分析。</p>
     </div>
@@ -20872,6 +20885,18 @@ function load() {
       <td class="muted">${esc(r.account ?? "—")}</td>
       <td>${brief(r.abstract)}</td>`);
 
+  // top剧重点跟踪
+  renderTable("track-tbl",
+    ["排名", "剧名", "进入TOP10次数", "平均排名", "最好排名", "最近一期排名", "最近上榜时间"],
+    D.track50 || [],
+    (r) => `<td>${rankNum(r.rank)}</td>
+      <td class="drama-name">${esc(r.name)}</td>
+      <td class="num red">${r.count}次</td>
+      <td class="num">${r.avg}</td>
+      <td class="num">${r.best}</td>
+      <td class="num">${r.last_rank ?? "—"}</td>
+      <td class="muted">${esc(r.last_time || "—")}</td>`);
+
   // 老剧复投
   renderTable("reinvest-tbl",
     ["排名", "剧名", "预计上线", "两周前上榜", "累计上榜", "最近上榜", "集数", "风格", "9月消耗(元)", "7日ROI", "选剧依据"],
@@ -20889,7 +20914,19 @@ function load() {
       <td class="reason">${brief(r.reason)}</td>`);
 
   // 新剧推荐（口径 A/B + 日期切换）
-  const dates = D.release_dates || ["2026-09-03"];
+  // 网页新剧推荐只展示 T+2（后天上线）批次
+  const _plusDays = (s, n) => {
+    const dt = new Date(String(s) + "T00:00:00");
+    dt.setDate(dt.getDate() + n);
+    return dt.toISOString().slice(0, 10);
+  };
+  const _t2 = _plusDays(D.generated || D.updated_at, 2);
+  const _allDates = D.release_dates || [];
+  let dates = _allDates.filter((d) => d === _t2);
+  if (!dates.length) {
+    const _later = _allDates.filter((d) => d >= _t2).sort();
+    dates = _later.length ? [_later[0]] : (_allDates.length ? [_allDates[0]] : [_t2]);
+  }
   const metrics = [
     { key: "breadth", label: "口径A · 上榜剧数" },
     { key: "weighted", label: "口径B · 账号权重50%" },
