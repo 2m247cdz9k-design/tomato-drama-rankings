@@ -387,7 +387,7 @@
     <div class="sec-head">
       <span class="sec-tag">06</span>
       <h2>新剧推荐榜</h2>
-      <p><b>网页只展示 T+2（后天上线）批次</b>；<b>口径A</b>＝广度型（内容为主、账号小幅加分，对照组）；<b>口径B</b>＝精品账号优先（账号战绩占 50% 权重）。<b>9·14 起每榜只保留 TOP15</b>（主推前 5、备选 6-15），9·13 及之前批次保持 TOP20 并锁定回测。覆盖 <b id="rel-dates">—</b> 可投新剧（共 <b id="rel-total">—</b> 部）。</p>
+      <p><b>网页展示 T+2（后天上线）及之前的批次，T+3 之后不展示</b>；<b>口径A</b>＝广度型（内容为主、账号小幅加分，对照组）；<b>口径B</b>＝精品账号优先（账号战绩占 50% 权重）。<b>9·14 起每榜只保留 TOP15</b>（主推前 5、备选 6-15），9·13 及之前批次保持 TOP20 并锁定回测。覆盖 <b id="rel-dates">—</b> 可投新剧（共 <b id="rel-total">—</b> 部）。</p>
     </div>
     <details class="rules" id="rule-detail">
       <summary><span>AB 打分规则说明</span><span class="rule-arrow">▼</span></summary>
@@ -20914,7 +20914,7 @@ function load() {
       <td class="reason">${brief(r.reason)}</td>`);
 
   // 新剧推荐（口径 A/B + 日期切换）
-  // 网页新剧推荐只展示 T+2（后天上线）批次
+  // 网页新剧推荐展示 T+2（后天上线）及之前的全部批次，T+3 及以后不展示
   const _plusDays = (s, n) => {
     const dt = new Date(String(s) + "T00:00:00");
     dt.setDate(dt.getDate() + n);
@@ -20922,10 +20922,10 @@ function load() {
   };
   const _t2 = _plusDays(D.generated || D.updated_at, 2);
   const _allDates = D.release_dates || [];
-  let dates = _allDates.filter((d) => d === _t2);
+  let dates = _allDates.filter((d) => d <= _t2);
   if (!dates.length) {
-    const _later = _allDates.filter((d) => d >= _t2).sort();
-    dates = _later.length ? [_later[0]] : (_allDates.length ? [_allDates[0]] : [_t2]);
+    const _earlier = _allDates.filter((d) => d <= _t2).sort().reverse();
+    dates = _earlier.length ? _earlier : (_allDates.length ? [_allDates[0]] : [_t2]);
   }
   const metrics = [
     { key: "breadth", label: "口径A · 上榜剧数" },
