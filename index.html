@@ -223,6 +223,8 @@
   .rules summary .rule-arrow { color: var(--text2); font-size: 12px; transition: transform .2s; }
   .rule-card.rule-c h3 { color: #0a6fb5; }
   .rule-card.rule-c li::before { background: #0a6fb5; }
+  .rule-card.rule-d h3 { color: #8a4bd0; }
+  .rule-card.rule-d li::before { background: #8a4bd0; }
   .rule-head { font-size: 12.5px; font-weight: 700; color: var(--text2); margin: 10px 0 4px; }
   .rule-card.rule-c li b, .rule-card.rule-b li b { color: var(--text); }
   .rule-tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 999px; margin-left: 6px; vertical-align: 1px; }
@@ -397,7 +399,7 @@
     <div class="sec-head">
       <span class="sec-tag">06</span>
       <h2>新剧推荐榜</h2>
-      <p><b>9·20 起每榜 TOP20（主推前 10、备选 11-20）；9·14～9·19 的批次为已锁定的 TOP15，9·13 及之前为 TOP20</b>。网页展示 T+2（后天上线）及之前的批次，T+3 之后不展示。当前并行两套口径：<b>口径B</b>＝账号权重型（内容与账号平分权重）；<b>口径C</b>＝账号层级优先型。原<b>口径A（广度型）已于 9·17 下线</b> —— 9·03～9·16 实测：A 命中率 7.5%、B 13.6%，A 独立命中的剧只有 4 部/265 席，占着席位不划算。覆盖 <b id="rel-dates">—</b> 可投新剧（共 <b id="rel-total">—</b> 部）。</p>
+      <p><b>9·20 起每榜 TOP20（主推前 10、备选 11-20）；9·14～9·19 的批次为已锁定的 TOP15，9·13 及之前为 TOP20</b>。网页展示 T+2（后天上线）及之前的批次，T+3 之后不展示。当前并行三套口径：<b>口径B</b>＝账号权重型（内容与账号平分权重）；<b>口径C</b>＝账号层级优先型；<b>口径D</b>＝拉片质量型（按成片拉片的推荐指数排序，只在做过拉片的批次出现）。原<b>口径A（广度型）已于 9·17 下线</b> —— 9·03～9·16 实测：A 命中率 7.5%、B 13.6%，A 独立命中的剧只有 4 部/265 席，占着席位不划算。覆盖 <b id="rel-dates">—</b> 可投新剧（共 <b id="rel-total">—</b> 部）。</p>
     </div>
     <details class="rules" id="rule-detail">
       <summary><span>选剧口径与打分规则说明（B / C）</span><span class="rule-arrow">▼</span></summary>
@@ -426,6 +428,18 @@
             <li>硬规则与口径 B 一致：50 集以下、未验证续季排除，每榜续季最多 4 部</li>
           </ul>
           <p class="rule-note">特点：把账号信号放到绝对主导，内容分只做同层细分。回测命中率 21.0%（9·03～9·16，统一按每期 TOP15 对比）。9·20 起每批 20 席，同账号仍限 3 席。</p>
+        </div>
+        <div class="rule-card rule-d">
+          <h3>口径 D · 拉片质量型<span class="rule-tag new">新增</span></h3>
+          <p class="rule-head">按成片拉片的推荐指数排序，不参与账号打分</p>
+          <ul>
+            <li><b>排序依据：</b>从常读下载每部剧的第 1、2 集成片，逐段拉片后给出推荐指数（0-100），按指数从高到低出榜</li>
+            <li><b>五个维度（加权）：</b>前 3 秒钩子 25 ｜ 前 30 秒节奏与信息密度 25 ｜ 画面制作质量 20 ｜ 题材与账号契合 15 ｜ 配音字幕与卡点完成度 15</li>
+            <li><b>分档：</b>强推 ≥80 ｜ 可试 60-79 ｜ 放弃 &lt;60</li>
+            <li><b>覆盖范围：</b>只对已做过拉片的批次出榜（当前为 9·21 批次的 27 部），其余批次不显示该口径</li>
+            <li><b>与 B/C 的关系：</b>互相独立、并列对照。D 回答的是"这剧内容本身好不好看"，B/C 回答的是"这剧跑不跑得出来"</li>
+          </ul>
+          <p class="rule-note">用途：用拉片结论验证"内容质量"能否提升筛剧准确率 —— 后续会拿 D 的排序和实际上榜结果做对照回测。</p>
         </div>
         <div class="rule-card rule-full">
           <h3 style="color:var(--text2)">为什么是这个规则 —— 9·03～9·16 实测依据</h3>
@@ -475,7 +489,7 @@
 <script>
 window.__DATA__ = {
  "generated": "2026-09-18",
- "updated_at": "2026-09-18 17:31",
+ "updated_at": "2026-09-18 18:16",
  "release_candidates": 30212,
  "release_dates": [
   "2026-09-21",
@@ -20772,7 +20786,8 @@ function load() {
   const metrics = [
     { key: "weighted", label: "口径B · 账号权重型" },
     { key: "tiered", label: "口径C · 账号层级优先" },
-  ];
+    { key: "cast", label: "口径D · 拉片质量" },
+  ].filter((m) => (D.release || []).some((r) => r.metric === m.key));
   let currentMetric = metrics[0].key;
   let currentDate = dates[0];
   const mTabs = document.getElementById("metric-tabs");
