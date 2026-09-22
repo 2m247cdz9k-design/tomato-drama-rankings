@@ -201,6 +201,27 @@
     box-shadow: 0 4px 14px rgba(0,0,0,.16);
   }
   .date-tab.active b { color: #ff8a82; }
+
+  /* ---------- 批次标签折叠：默认只露 2 行，其余收起 ---------- */
+  .tabs-fold { position: relative; --fold-h: 82px; }
+  .tabs-fold .date-tabs { margin-bottom: 0; }
+  .tabs-fold.clamped .date-tabs { max-height: var(--fold-h); overflow: hidden; }
+  .tabs-fold .tabs-mask {
+    display: none; position: absolute; left: 0; right: 0; bottom: 0; height: 44px;
+    background: linear-gradient(180deg, rgba(245,245,247,0) 0%, var(--bg) 82%);
+    pointer-events: none;
+  }
+  .tabs-fold.clamped .tabs-mask { display: block; }
+  .tabs-toggle {
+    display: inline-flex; align-items: center; gap: 6px; margin: 10px 0 18px;
+    border: 1px solid var(--line); background: var(--card); border-radius: 999px;
+    padding: 8px 20px; font-size: 13px; font-weight: 600; color: var(--text2);
+    cursor: pointer; transition: all .2s; font-family: inherit;
+  }
+  .tabs-toggle:hover { color: var(--text); border-color: #c7c7cc; }
+  .tabs-toggle .chev { font-size: 11px; transition: transform .2s; }
+  .tabs-toggle[aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .tabs-toggle[hidden] { display: none; }
   .pill.green { background: #e8f5ee; color: #1f7a4d; }
   .reason { color: #4a4a50; max-width: 480px; font-size: 12.5px; }
   .reason b { color: var(--text); }
@@ -460,7 +481,13 @@
       </div>
     </details>
     <div class="date-tabs" id="metric-tabs"></div>
-    <div class="date-tabs" id="release-tabs"></div>
+    <div class="tabs-fold clamped" id="release-tabs-fold">
+      <div class="date-tabs" id="release-tabs"></div>
+      <div class="tabs-mask"></div>
+    </div>
+    <button class="tabs-toggle" id="release-tabs-toggle" hidden aria-expanded="false">
+      <span id="release-tabs-toggle-text">展开全部批次</span><span class="chev">▾</span>
+    </button>
     <div id="release-stat" class="hit-stat"></div>
     <div class="panel tbl-wrap">
       <table id="release-tbl"></table>
@@ -24624,15 +24651,42 @@ function load() {
   const countFor = (m, dt) => (D.release || []).filter((r) => r.metric === m && r.date === dt).length;
   function renderDateTabs() {
     const ds = datesFor(currentMetric);
+    fold.classList.add("clamped");
     if (!ds.length) {
       tabs.innerHTML = "";
       currentDate = "";
+      tgl.hidden = true;
       return;
     }
     if (!ds.includes(currentDate)) currentDate = ds[0];
     tabs.innerHTML = ds.map((dt) =>
       `<button class="date-tab${dt === currentDate ? " active" : ""}" data-date="${dt}">${fmtDate(dt)} 上新 <b>${countFor(currentMetric, dt)}</b></button>`).join("");
+    syncFold();
   }
+
+  // 批次折叠：默认只露两行，超出部分收起
+  const fold = document.getElementById("release-tabs-fold");
+  const tgl = document.getElementById("release-tabs-toggle");
+  const tglText = document.getElementById("release-tabs-toggle-text");
+
+  function syncFold() {
+    const one = tabs.querySelector(".date-tab");
+    const rowH = one ? one.offsetHeight : 36;
+    const twoRows = Math.round(rowH * 2 + 10);
+    fold.style.setProperty("--fold-h", twoRows + "px");
+    const need = tabs.scrollHeight > twoRows + 6;
+    tgl.hidden = !need;
+    if (!need) fold.classList.remove("clamped");
+    const clamped = fold.classList.contains("clamped");
+    tgl.setAttribute("aria-expanded", clamped ? "false" : "true");
+    tglText.textContent = clamped
+      ? `展开全部 ${tabs.querySelectorAll(".date-tab").length} 个批次`
+      : "收起批次";
+  }
+  tgl.addEventListener("click", () => {
+    fold.classList.toggle("clamped");
+    syncFold();
+  });
   function renderRelease() {
     const rows = D.release.filter((r) => r.metric === currentMetric && r.date === currentDate);
     renderTable("release-tbl",
